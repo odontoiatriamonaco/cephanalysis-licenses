@@ -1,5 +1,5 @@
 {
-  "_info": "CephAnalysis Pro — Registro Licenze. Modificare solo tramite il License Manager.",
+  "_info": "CephAnalysis Pro â Registro Licenze. Modificare solo tramite il License Manager.",
   "_updated": "2026-03-17",
   "_version": "1.0",
   "licenses": {
@@ -11,7 +11,7 @@
       "type": "pro",
       "expires": "2027-12-31",
       "created": "2026-03-17",
-      "notes": "Licenza demo — non distribuire"
+      "notes": "Licenza demo â non distribuire"
     },
     "CEPH-MONA-XXXX-0001": {
       "studio": "Studio Monaco",
@@ -22,6 +22,16 @@
       "expires": null,
       "created": "2026-03-17",
       "notes": "Licenza sviluppatore"
+    },
+    "CEPH-JTR2-2TDB-YAHY": {
+      "studio": "Ufficio",
+      "owner": "Maurizio Monaco",
+      "email": "",
+      "active": true,
+      "type": "lifetime",
+      "expires": null,
+      "created": "2026-03-17",
+      "notes": ""
     }
   }
 }
