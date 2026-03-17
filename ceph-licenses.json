@@ -1,0 +1,27 @@
+{
+  "_info": "CephAnalysis Pro — Registro Licenze. Modificare solo tramite il License Manager.",
+  "_updated": "2026-03-17",
+  "_version": "1.0",
+  "licenses": {
+    "CEPH-DEMO-0000-0000": {
+      "studio": "Studio Demo",
+      "owner": "Demo User",
+      "email": "",
+      "active": true,
+      "type": "pro",
+      "expires": "2027-12-31",
+      "created": "2026-03-17",
+      "notes": "Licenza demo — non distribuire"
+    },
+    "CEPH-MONA-XXXX-0001": {
+      "studio": "Studio Monaco",
+      "owner": "Monaco Maurizio",
+      "email": "odontoiatria.monaco@gmail.com",
+      "active": true,
+      "type": "lifetime",
+      "expires": null,
+      "created": "2026-03-17",
+      "notes": "Licenza sviluppatore"
+    }
+  }
+}
