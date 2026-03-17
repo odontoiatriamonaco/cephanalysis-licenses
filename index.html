@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<!-- CephAnalysis Pro — License Manager v1.0 (2026-03-17) -->
+<!-- Clone del sistema OrthoManager Pro, indipendente e dedicato a CephAnalysis -->
+<!-- Deploy: GitHub Pages su repo separato (es. odontoiatriamonaco/cephanalysis-licenses) -->
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CephAnalysis Pro — License Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06080f;
+  --card: #0c1120;
+  --card-border: rgba(139,92,246,.12);
+  --card-hover: rgba(139,92,246,.06);
+  --accent: #8b5cf6;
+  --accent2: #a78bfa;
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --blue: #3b82f6;
+  --text: #e4e7ed;
+  --text2: #94a3b8;
+  --text3: #475569;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Outfit', system-ui, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; }
+body::before {
+  content:'';
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(139,92,246,.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(167,139,250,.04) 0%, transparent 50%);
+  pointer-events:none; z-index:0;
+}
+
+/* ── LOGIN ── */
+#login-screen { display:flex; align-items:center; justify-content:center; min-height:100vh; position:relative; z-index:1; }
+.login-card {
+  background:var(--card);
+  border:1px solid rgba(139,92,246,.25);
+  border-radius:1.25rem;
+  padding:2.5rem;
+  width:380px;
+  text-align:center;
+  box-shadow: 0 0 60px rgba(139,92,246,.08);
+}
+.login-card .logo { font-size:2.8rem; margin-bottom:.5rem; }
+.login-card h1 { font-size:1.3rem; font-weight:600; margin-bottom:.2rem; }
+.login-card .sub { color:var(--text3); font-size:.8rem; margin-bottom:2rem; }
+.login-hint { font-size:.7rem; color:var(--text3); margin-top:.75rem; line-height:1.5; }
+
+/* ── APP ── */
+#app { display:none; position:relative; z-index:1; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1rem 2rem;
+  border-bottom:1px solid rgba(139,92,246,.12);
+  background:rgba(12,17,32,.85);
+  backdrop-filter:blur(12px);
+  position:sticky; top:0; z-index:10;
+}
+.topbar-left { display:flex; align-items:center; gap:.75rem; }
+.topbar-logo { font-size:1.5rem; }
+.topbar h1 { font-size:1rem; font-weight:600; }
+.topbar h1 span { color:var(--accent2); font-weight:300; }
+.topbar-right { display:flex; align-items:center; gap:1rem; }
+
+.container { max-width:1150px; margin:0 auto; padding:2rem; }
+
+/* ── STATS ── */
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem; }
+.stat {
+  background:var(--card);
+  border:1px solid rgba(139,92,246,.12);
+  border-radius:1rem;
+  padding:1.25rem;
+  transition: border-color .2s;
+}
+.stat:hover { border-color: rgba(139,92,246,.3); }
+.stat-label { font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text3); margin-bottom:.5rem; }
+.stat-value { font-size:1.8rem; font-weight:700; font-family:var(--mono); }
+.stat-value.green { color:var(--green); }
+.stat-value.amber { color:var(--amber); }
+.stat-value.red   { color:var(--red); }
+.stat-value.purple{ color:var(--accent2); }
+
+/* ── ACTIONS ── */
+.actions { display:flex; gap:.75rem; margin-bottom:1.5rem; flex-wrap:wrap; align-items:center; }
+.search-box {
+  flex:1; min-width:200px; max-width:300px;
+  padding:.5rem .9rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(139,92,246,.15);
+  border-radius:.6rem;
+  color:var(--text);
+  font-size:.82rem;
+  font-family:var(--sans);
+  outline:none;
+}
+.search-box:focus { border-color:var(--accent); }
+.search-box::placeholder { color:var(--text3); }
+
+/* ── TABLE ── */
+.table-wrap {
+  background:var(--card);
+  border:1px solid rgba(139,92,246,.12);
+  border-radius:1rem;
+  overflow:hidden;
+}
+table { width:100%; border-collapse:collapse; }
+th {
+  text-align:left; padding:.75rem 1rem;
+  font-size:.7rem; text-transform:uppercase; letter-spacing:.08em;
+  color:var(--text3);
+  background:rgba(255,255,255,.02);
+  border-bottom:1px solid rgba(139,92,246,.1);
+}
+td { padding:.75rem 1rem; border-bottom:1px solid rgba(255,255,255,.03); font-size:.85rem; vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:var(--card-hover); }
+.key-cell { font-family:var(--mono); font-size:.75rem; letter-spacing:.03em; color:var(--accent2); cursor:pointer; }
+.key-cell:hover { text-decoration:underline; }
+
+/* ── BADGES ── */
+.badge { display:inline-block; padding:.2rem .6rem; border-radius:999px; font-size:.65rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+.badge-active   { background:rgba(34,197,94,.12);  color:var(--green); border:1px solid rgba(34,197,94,.25); }
+.badge-expiring { background:rgba(245,158,11,.12); color:var(--amber); border:1px solid rgba(245,158,11,.25); }
+.badge-expired  { background:rgba(239,68,68,.1);   color:var(--red);   border:1px solid rgba(239,68,68,.2); }
+.badge-disabled { background:rgba(100,116,139,.1); color:var(--text3); border:1px solid rgba(100,116,139,.2); }
+.badge-trial    { background:rgba(245,158,11,.1);  color:var(--amber); border:1px solid rgba(245,158,11,.2); }
+.badge-standard { background:rgba(59,130,246,.1);  color:var(--blue);  border:1px solid rgba(59,130,246,.2); }
+.badge-pro      { background:rgba(139,92,246,.12); color:var(--accent2);border:1px solid rgba(139,92,246,.25); }
+.badge-lifetime { background:rgba(34,197,94,.1);   color:var(--green); border:1px solid rgba(34,197,94,.2); }
+
+/* ── BUTTONS ── */
+.btn { padding:.55rem 1.1rem; border:none; border-radius:.6rem; font-size:.8rem; font-weight:600; cursor:pointer; font-family:var(--sans); transition:all .15s; display:inline-flex; align-items:center; gap:.4rem; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#7c3aed; }
+.btn-danger  { background:transparent; color:var(--red); border:1px solid rgba(239,68,68,.3); }
+.btn-danger:hover { background:rgba(239,68,68,.1); }
+.btn-ghost   { background:transparent; color:var(--text2); border:1px solid rgba(139,92,246,.15); }
+.btn-ghost:hover { background:var(--card-hover); color:var(--text); border-color:rgba(139,92,246,.3); }
+.btn-success { background:var(--green); color:#fff; }
+.btn-success:hover { background:#16a34a; }
+.btn-amber   { background:var(--amber); color:#000; }
+.btn-amber:hover { background:#d97706; }
+.btn-sm { padding:.35rem .7rem; font-size:.72rem; }
+.btn-logout { background:transparent; color:var(--text3); border:1px solid rgba(139,92,246,.15); }
+.btn-logout:hover { color:var(--red); border-color:rgba(239,68,68,.3); }
+
+/* ── MODAL ── */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:100; }
+.modal {
+  background:var(--card);
+  border:1px solid rgba(139,92,246,.25);
+  border-radius:1.25rem;
+  padding:2rem;
+  width:480px;
+  max-width:90vw;
+  max-height:90vh;
+  overflow-y:auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.modal h2 { font-size:1.1rem; font-weight:600; margin-bottom:1.5rem; display:flex; align-items:center; gap:.5rem; }
+.modal-actions { display:flex; gap:.75rem; justify-content:flex-end; margin-top:1.5rem; }
+
+/* ── FORM ── */
+.field { margin-bottom:1rem; }
+.field label { display:block; font-size:.75rem; color:var(--text2); margin-bottom:.35rem; font-weight:500; }
+.field input, .field select, .field textarea {
+  width:100%; padding:.6rem .85rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(139,92,246,.15);
+  border-radius:.5rem;
+  color:var(--text);
+  font-size:.85rem;
+  font-family:var(--sans);
+  outline:none;
+  transition: border-color .15s;
+}
+.field input:focus, .field select:focus { border-color:var(--accent); }
+.field input[type="date"] { color-scheme:dark; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.field .hint { font-size:.65rem; color:var(--text3); margin-top:.25rem; }
+
+/* ── KEY DISPLAY ── */
+.key-display {
+  background:rgba(139,92,246,.06);
+  border:2px dashed rgba(139,92,246,.3);
+  border-radius:.75rem;
+  padding:1.25rem;
+  text-align:center;
+  margin:1rem 0;
+  cursor:pointer;
+  transition: background .15s;
+}
+.key-display:hover { background:rgba(139,92,246,.1); }
+.key-display .key { font-family:var(--mono); font-size:1.25rem; font-weight:600; color:var(--accent2); letter-spacing:.06em; user-select:all; }
+.key-display .copy-hint { font-size:.7rem; color:var(--text3); margin-top:.5rem; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:2rem; right:2rem;
+  background:var(--card);
+  border:1px solid var(--green);
+  border-radius:.75rem;
+  padding:.75rem 1.25rem;
+  font-size:.8rem;
+  color:var(--green);
+  z-index:200;
+  animation:slideIn .3s ease;
+  max-width:320px;
+}
+@keyframes slideIn { from { transform:translateY(16px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+/* ── EMPTY ── */
+.empty { text-align:center; padding:3rem; color:var(--text3); }
+.empty-icon { font-size:2.5rem; margin-bottom:.75rem; opacity:.5; }
+
+/* ── DEVICE LIST ── */
+.device-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.6rem .9rem;
+  background:rgba(255,255,255,.03);
+  border-radius:.5rem;
+  margin-bottom:.5rem;
+  font-size:.8rem;
+}
+.device-fp { font-family:var(--mono); font-size:.72rem; color:var(--accent2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width:768px) {
+  .stats { grid-template-columns:repeat(2,1fr); }
+  .container { padding:1rem; }
+  .field-row { grid-template-columns:1fr; }
+  td:nth-child(4), th:nth-child(4),
+  td:nth-child(6), th:nth-child(6) { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="logo">🧠</div>
+    <h1>CephAnalysis Pro</h1>
+    <div class="sub">License Manager — Pannello Amministrazione</div>
+    <div class="field">
+      <input type="password" id="login-pass" placeholder="GitHub Personal Access Token" style="text-align:center;font-size:.9rem;padding:.8rem">
+    </div>
+    <div id="login-error" style="color:var(--red);font-size:.8rem;margin-bottom:.75rem;min-height:1.2em"></div>
+    <button class="btn btn-primary" style="width:100%;padding:.75rem;font-size:.9rem" onclick="doLogin()">Accedi</button>
+    <div class="login-hint">
+      Inserisci il GitHub Personal Access Token con permessi <code style="color:var(--accent2)">repo</code>.<br>
+      Repo: <code style="color:var(--accent2)">odontoiatriamonaco/cephanalysis-licenses</code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">🧠</span>
+      <h1>CephAnalysis Pro <span>— License Manager</span></h1>
+    </div>
+    <div class="topbar-right">
+      <span id="last-update" style="font-size:.7rem;color:var(--text3)"></span>
+      <button class="btn btn-logout btn-sm" onclick="doLogout()">Esci</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Stats -->
+    <div class="stats" id="stats"></div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-primary" onclick="showNewModal()">+ Nuova Licenza</button>
+      <button class="btn btn-ghost" onclick="loadData()">🔄 Aggiorna</button>
+      <button class="btn btn-ghost" onclick="exportJSON()">📋 Esporta JSON</button>
+      <input class="search-box" id="search-box" placeholder="🔍 Cerca studio, chiave, titolare…" oninput="renderTable()">
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Chiave</th>
+            <th>Studio / Titolare</th>
+            <th>Tipo</th>
+            <th>Scadenza</th>
+            <th>Browser ID</th>
+            <th>Stato</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+      <div id="empty-state" class="empty" style="display:none">
+        <div class="empty-icon">📄</div>
+        <p>Nessuna licenza presente</p>
+        <p style="font-size:.75rem;margin-top:.5rem">Clicca "Nuova Licenza" per generarne una</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Nuova Licenza ═══ -->
+<div id="modal-new" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal('modal-new')">
+  <div class="modal">
+    <h2>🔑 Nuova Licenza CephAnalysis Pro</h2>
+    <div class="field">
+      <label>Nome Studio *</label>
+      <input id="f-studio" placeholder="Studio Ortodontico Rossi">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Titolare *</label>
+        <input id="f-owner" placeholder="Dr. Mario Rossi">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="f-email" type="email" placeholder="rossi@email.it">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Tipo Licenza</label>
+        <select id="f-type" onchange="updateMaxDevices()">
+          <option value="trial">Trial (30gg)</option>
+          <option value="standard" selected>Standard</option>
+          <option value="pro">Pro</option>
+          <option value="lifetime">Lifetime</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Durata (mesi) <span id="duration-hint" style="color:var(--text3);font-weight:400"></span></label>
+        <input id="f-months" type="number" value="12" min="1" max="120">
+        <div class="hint" id="expires-preview"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Note interne</label>
+      <input id="f-notes" placeholder="Note opzionali…">
+    </div>
+    <div id="generated-key" style="display:none">
+      <div class="key-display" id="key-display-new" onclick="copyKey(document.getElementById('new-key-text').textContent)">
+        <div class="key" id="new-key-text"></div>
+        <div class="copy-hint">📋 Clicca per copiare</div>
+      </div>
+    </div>
+    <div id="gen-error" style="color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.2em"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new')">Chiudi</button>
+      <button class="btn btn-primary" id="btn-generate" onclick="generateLicense()">🔑 Genera Chiave</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Modifica Licenza ═══ -->
+<div id="modal-edit" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal('modal-edit')">
+  <div class="modal">
+    <h2>✏️ Modifica Licenza</h2>
+    <div class="key-display" style="cursor:default;margin-bottom:1.25rem">
+      <div class="key" id="edit-key-text" style="font-size:1rem"></div>
+    </div>
+    <div class="field">
+      <label>Nome Studio</label>
+      <input id="e-studio">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Titolare</label>
+        <input id="e-owner">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="e-email" type="email">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Tipo Licenza</label>
+        <select id="e-type">
+          <option value="trial">Trial</option>
+          <option value="standard">Standard</option>
+          <option value="pro">Pro</option>
+          <option value="lifetime">Lifetime</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Scadenza</label>
+        <input id="e-expires" type="date">
+        <div class="hint">Lascia vuoto per licenza perpetua</div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Stato</label>
+        <select id="e-active">
+          <option value="true">Attiva</option>
+          <option value="false">Disattivata</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Note</label>
+        <input id="e-notes">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-edit')">Annulla</button>
+      <button class="btn btn-primary" onclick="saveEdit()">💾 Salva Modifiche</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Dispositivi ═══ -->
+<div id="modal-devices" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal('modal-devices')">
+  <div class="modal">
+    <h2>🖥️ Browser registrati</h2>
+    <div class="key-display" style="cursor:default;margin-bottom:1.25rem;padding:.75rem">
+      <div class="key" id="dev-key-text" style="font-size:.9rem"></div>
+    </div>
+    <p style="font-size:.8rem;color:var(--text3);margin-bottom:1rem;">
+      Il "Browser ID" è un UUID stabile generato al primo utilizzo e salvato in localStorage del browser del cliente.
+      Resettandolo permetti al cliente di riattivare la licenza su un nuovo browser/PC.
+    </p>
+    <div id="devices-list"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-devices')">Chiudi</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast" style="display:none"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  CONFIG — modifica questi valori prima del deploy
+// ══════════════════════════════════════════════════
+const GITHUB_OWNER = 'odontoiatriamonaco';
+const GITHUB_REPO  = 'cephanalysis-licenses';   // repo dedicato, separato da OrthoManager
+const GITHUB_FILE  = 'ceph-licenses.json';
+
+let GITHUB_TOKEN = '';
+let licensesData  = null;
+let fileSHA       = null;
+let editingKey    = null;
+
+// ══ AUTH ══
+async function doLogin() {
+  const token = document.getElementById('login-pass').value.trim();
+  if (!token) return;
+  GITHUB_TOKEN = token;
+  document.getElementById('login-error').textContent = '';
+  try {
+    const res = await ghFetch('GET');
+    if (res.ok) {
+      sessionStorage.setItem('ceph_lm_token', token);
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      loadData();
+    } else {
+      document.getElementById('login-error').textContent = 'Token non valido o nessun accesso al repo';
+      GITHUB_TOKEN = '';
+    }
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Errore di connessione';
+    GITHUB_TOKEN = '';
+  }
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+function doLogout() {
+  sessionStorage.removeItem('ceph_lm_token');
+  GITHUB_TOKEN = '';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
+}
+
+// Auto-login da sessione
+(function() {
+  const saved = sessionStorage.getItem('ceph_lm_token');
+  if (saved) { GITHUB_TOKEN = saved; document.getElementById('login-pass').value = saved; doLogin(); }
+})();
+
+// ══ GITHUB API ══
+function ghFetch(method, body) {
+  const opts = {
+    method: method || 'GET',
+    headers: {
+      'Authorization': `token ${GITHUB_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  return fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, opts);
+}
+
+async function loadData() {
+  try {
+    const res  = await ghFetch('GET');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    fileSHA      = data.sha;
+    licensesData = JSON.parse(atob(data.content.replace(/\n/g,'')));
+    document.getElementById('last-update').textContent = 'Ultimo aggiornamento: ' + (licensesData._updated || '—');
+    renderStats();
+    renderTable();
+  } catch(e) {
+    showToast('Errore caricamento: ' + e.message, true);
+  }
+}
+
+async function saveData(commitMsg) {
+  licensesData._updated = new Date().toISOString().split('T')[0];
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(licensesData, null, 2))));
+  try {
+    const res  = await ghFetch('PUT', {
+      message: commitMsg || 'License update via CephAnalysis License Manager',
+      content,
+      sha: fileSHA
+    });
+    const data = await res.json();
+    if (data.content) {
+      fileSHA = data.content.sha;
+      showToast('✅ Salvato su GitHub');
+      document.getElementById('last-update').textContent = 'Ultimo aggiornamento: ' + licensesData._updated;
+    } else {
+      showToast('Errore: ' + (data.message || 'SHA mismatch'), true);
+      await loadData(); // ricarica per aggiornare SHA
+    }
+  } catch(e) {
+    showToast('Errore connessione GitHub', true);
+  }
+}
+
+// ══ RENDER ══
+function getStatus(lic) {
+  if (!lic.active) return { label: 'Disattivata', cls: 'badge-disabled' };
+  if (lic.type === 'lifetime') return { label: 'Attiva', cls: 'badge-active' };
+  if (!lic.expires) return { label: 'Attiva', cls: 'badge-active' };
+  const days = Math.ceil((new Date(lic.expires) - new Date()) / 86400000);
+  if (days < 0)  return { label: 'Scaduta',   cls: 'badge-expired' };
+  if (days < 30) return { label: `${days}gg`,  cls: 'badge-expiring' };
+  return { label: 'Attiva', cls: 'badge-active' };
+}
+
+function getTypeBadge(type) {
+  return { trial:'badge-trial', standard:'badge-standard', pro:'badge-pro', lifetime:'badge-lifetime' }[type] || 'badge-standard';
+}
+
+function renderStats() {
+  const lics = Object.values(licensesData.licenses);
+  const now  = new Date();
+  const active   = lics.filter(l => l.active && (l.type==='lifetime' || !l.expires || new Date(l.expires)>=now)).length;
+  const expiring = lics.filter(l => l.active && l.expires && Math.ceil((new Date(l.expires)-now)/86400000) < 30 && Math.ceil((new Date(l.expires)-now)/86400000) >= 0).length;
+  const expired  = lics.filter(l => l.expires && new Date(l.expires)<now).length;
+  const total    = lics.length;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="stat-label">Licenze Attive</div><div class="stat-value green">${active}</div></div>
+    <div class="stat"><div class="stat-label">In Scadenza (&lt;30gg)</div><div class="stat-value amber">${expiring}</div></div>
+    <div class="stat"><div class="stat-label">Scadute</div><div class="stat-value red">${expired}</div></div>
+    <div class="stat"><div class="stat-label">Totale</div><div class="stat-value purple">${total}</div></div>
+  `;
+}
+
+function renderTable() {
+  const q = (document.getElementById('search-box').value || '').toLowerCase();
+  let entries = Object.entries(licensesData.licenses);
+
+  if (q) {
+    entries = entries.filter(([key, lic]) =>
+      key.toLowerCase().includes(q) ||
+      (lic.studio||'').toLowerCase().includes(q) ||
+      (lic.owner||'').toLowerCase().includes(q) ||
+      (lic.email||'').toLowerCase().includes(q)
+    );
+  }
+
+  // Ordina: attive prima, poi per data creazione desc
+  entries.sort((a,b) => {
+    if (a[1].active !== b[1].active) return b[1].active - a[1].active;
+    return (b[1].created||'').localeCompare(a[1].created||'');
+  });
+
+  if (entries.length === 0) {
+    document.getElementById('table-body').innerHTML = '';
+    document.getElementById('empty-state').style.display = 'block';
+    return;
+  }
+  document.getElementById('empty-state').style.display = 'none';
+
+  document.getElementById('table-body').innerHTML = entries.map(([key, lic]) => {
+    const status   = getStatus(lic);
+    const daysLeft = lic.expires ? Math.ceil((new Date(lic.expires)-new Date())/86400000) : null;
+    const expText  = lic.type === 'lifetime' ? '<span style="color:var(--green)">∞ Perpetua</span>'
+                   : lic.expires
+                     ? `${lic.expires} <span style="color:var(--text3);font-size:.7rem">(${daysLeft>0?daysLeft+'gg':'scaduta'})</span>`
+                     : '<span style="color:var(--text3)">—</span>';
+    const deviceCell = lic.browserId
+      ? `<span style="color:var(--green);font-size:.75rem;font-family:var(--mono)" title="${lic.browserId}">🖥 ${lic.browserId.substring(0,8)}…</span>`
+      : `<span style="color:var(--text3);font-size:.75rem">Non attivata</span>`;
+
+    return `<tr>
+      <td class="key-cell" onclick="copyKey('${key}')" title="Clicca per copiare">${key}</td>
+      <td>
+        <strong>${lic.studio||'—'}</strong>
+        ${lic.owner ? `<br><span style="color:var(--text3);font-size:.75rem">${lic.owner}</span>` : ''}
+        ${lic.email ? `<br><span style="color:var(--text3);font-size:.7rem">${lic.email}</span>` : ''}
+      </td>
+      <td><span class="badge ${getTypeBadge(lic.type)}">${lic.type||'standard'}</span></td>
+      <td>${expText}</td>
+      <td>${deviceCell}</td>
+      <td><span class="badge ${status.cls}">${status.label}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm" onclick="copyKey('${key}')" title="Copia chiave">📋</button>
+        <button class="btn btn-ghost btn-sm" onclick="editLicense('${key}')" title="Modifica">✏️</button>
+        ${lic.browserId ? `<button class="btn btn-ghost btn-sm" onclick="showDevices('${key}')" title="Gestisci dispositivi">🖥</button>` : ''}
+        ${lic.active
+          ? `<button class="btn btn-danger btn-sm" onclick="toggleLicense('${key}',false)">Disattiva</button>`
+          : `<button class="btn btn-success btn-sm" onclick="toggleLicense('${key}',true)">Riattiva</button>`}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ══ GENERAZIONE CHIAVE ══
+function generateKey() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0,O,1,I
+  const seg   = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  return `CEPH-${seg()}-${seg()}-${seg()}`;
+}
+
+function updateMaxDevices() {
+  const type   = document.getElementById('f-type').value;
+  const months = document.getElementById('f-months');
+  const hint   = document.getElementById('duration-hint');
+  if (type === 'trial')    { months.value = '1';  hint.textContent = '(auto: 1 mese)'; months.readOnly = true; }
+  else if (type==='lifetime'){ months.value = '999'; hint.textContent = '(perpetua)'; months.readOnly = true; }
+  else { hint.textContent = ''; months.readOnly = false; }
+  updateExpiresPreview();
+}
+
+function updateExpiresPreview() {
+  const months = parseInt(document.getElementById('f-months').value) || 12;
+  const d = new Date(); d.setMonth(d.getMonth() + months);
+  document.getElementById('expires-preview').textContent = 'Scadenza: ' + d.toISOString().split('T')[0];
+}
+
+document.getElementById('f-months').addEventListener('input', updateExpiresPreview);
+updateExpiresPreview();
+
+async function generateLicense() {
+  const studio = document.getElementById('f-studio').value.trim();
+  const owner  = document.getElementById('f-owner').value.trim();
+  const email  = document.getElementById('f-email').value.trim();
+  const type   = document.getElementById('f-type').value;
+  const months = parseInt(document.getElementById('f-months').value) || 12;
+  const notes  = document.getElementById('f-notes').value.trim();
+
+  if (!studio || !owner) {
+    document.getElementById('gen-error').textContent = 'Studio e titolare sono obbligatori';
+    return;
+  }
+  document.getElementById('gen-error').textContent = '';
+
+  const key     = generateKey();
+  const now     = new Date();
+  const expires = type === 'lifetime' ? null : (() => { const d=new Date(now); d.setMonth(d.getMonth()+months); return d.toISOString().split('T')[0]; })();
+
+  licensesData.licenses[key] = {
+    studio, owner, email,
+    active: true,
+    type,
+    expires,
+    created: now.toISOString().split('T')[0],
+    notes
+  };
+
+  await saveData(`Nuova licenza ${type}: ${studio}`);
+  renderStats();
+  renderTable();
+
+  document.getElementById('new-key-text').textContent = key;
+  document.getElementById('generated-key').style.display = 'block';
+  document.getElementById('btn-generate').textContent = 'Genera Un\'altra';
+  showToast('🔑 Licenza creata: ' + key);
+}
+
+// ══ ACTIONS ══
+async function toggleLicense(key, active) {
+  const lic = licensesData.licenses[key];
+  if (!confirm(`${active?'Riattivare':'Disattivare'} la licenza di ${lic.studio}?`)) return;
+  lic.active = active;
+  await saveData(`Licenza ${active?'riattivata':'disattivata'}: ${key}`);
+  renderStats();
+  renderTable();
+  showToast(active ? '✅ Licenza riattivata' : '🔴 Licenza disattivata');
+}
+
+function showDevices(key) {
+  const lic = licensesData.licenses[key];
+  document.getElementById('dev-key-text').textContent = key;
+  const list = document.getElementById('devices-list');
+  if (!lic.browserId) {
+    list.innerHTML = '<p style="color:var(--text3);font-size:.85rem">Nessun browser registrato.</p>';
+  } else {
+    list.innerHTML = `
+      <div class="device-item">
+        <div>
+          <div class="device-fp">${lic.browserId}</div>
+          <div style="font-size:.7rem;color:var(--text3);margin-top:2px">
+            Attivato: ${lic.activatedAt ? new Date(lic.activatedAt).toLocaleDateString('it-IT') : '—'}
+            · Ultima verifica: ${lic.lastSeen ? new Date(lic.lastSeen).toLocaleDateString('it-IT') : '—'}
+          </div>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="resetDevice('${key}')">🔄 Reset</button>
+      </div>`;
+  }
+  document.getElementById('modal-devices').style.display = 'flex';
+}
+
+async function resetDevice(key) {
+  const lic = licensesData.licenses[key];
+  if (!confirm(`Resettare il browser registrato per ${lic.studio}?\n\nIl cliente potrà riattivare su un altro browser/PC.`)) return;
+  delete lic.browserId;
+  delete lic.activatedAt;
+  delete lic.lastSeen;
+  await saveData(`Reset dispositivo: ${key}`);
+  renderTable();
+  closeModal('modal-devices');
+  showToast('🔄 Dispositivo resettato — il cliente può riattivare su un nuovo browser');
+}
+
+function copyKey(key) {
+  navigator.clipboard.writeText(key).then(() => showToast('📋 Chiave copiata: ' + key));
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(licensesData,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ceph-licenses.json';
+  a.click();
+}
+
+// ══ MODAL NEW ══
+function showNewModal() {
+  document.getElementById('f-studio').value = '';
+  document.getElementById('f-owner').value  = '';
+  document.getElementById('f-email').value  = '';
+  document.getElementById('f-type').value   = 'standard';
+  document.getElementById('f-months').value = '12';
+  document.getElementById('f-notes').value  = '';
+  document.getElementById('generated-key').style.display = 'none';
+  document.getElementById('gen-error').textContent = '';
+  document.getElementById('btn-generate').textContent = '🔑 Genera Chiave';
+  document.getElementById('f-months').readOnly = false;
+  document.getElementById('duration-hint').textContent = '';
+  updateExpiresPreview();
+  document.getElementById('modal-new').style.display = 'flex';
+  setTimeout(() => document.getElementById('f-studio').focus(), 100);
+}
+
+// ══ MODAL EDIT ══
+function editLicense(key) {
+  editingKey = key;
+  const lic  = licensesData.licenses[key];
+  document.getElementById('edit-key-text').textContent = key;
+  document.getElementById('e-studio').value  = lic.studio  || '';
+  document.getElementById('e-owner').value   = lic.owner   || '';
+  document.getElementById('e-email').value   = lic.email   || '';
+  document.getElementById('e-type').value    = lic.type    || 'standard';
+  document.getElementById('e-expires').value = lic.expires || '';
+  document.getElementById('e-active').value  = lic.active ? 'true' : 'false';
+  document.getElementById('e-notes').value   = lic.notes   || '';
+  document.getElementById('modal-edit').style.display = 'flex';
+}
+
+async function saveEdit() {
+  if (!editingKey) return;
+  const lic     = licensesData.licenses[editingKey];
+  lic.studio    = document.getElementById('e-studio').value.trim();
+  lic.owner     = document.getElementById('e-owner').value.trim();
+  lic.email     = document.getElementById('e-email').value.trim();
+  lic.type      = document.getElementById('e-type').value;
+  lic.expires   = document.getElementById('e-expires').value || null;
+  lic.active    = document.getElementById('e-active').value === 'true';
+  lic.notes     = document.getElementById('e-notes').value.trim();
+  await saveData(`Modifica licenza: ${editingKey}`);
+  renderStats();
+  renderTable();
+  closeModal('modal-edit');
+  showToast('✅ Licenza aggiornata');
+}
+
+// ══ UTILS ══
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+  if (id === 'modal-edit') editingKey = null;
+}
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = isError ? 'var(--red)'   : 'var(--green)';
+  t.style.color       = isError ? 'var(--red)'   : 'var(--green)';
+  t.style.display = 'block';
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.style.display='none', 3500);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ['modal-new','modal-edit','modal-devices'].forEach(id => closeModal(id));
+  }
+});
+</script>
+</body>
+</html>
