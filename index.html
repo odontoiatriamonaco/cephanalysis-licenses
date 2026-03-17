@@ -689,6 +689,7 @@ function renderTable() {
         ${lic.active
           ? `<button class="btn btn-danger btn-sm" onclick="toggleLicense('${key}',false)">Disattiva</button>`
           : `<button class="btn btn-success btn-sm" onclick="toggleLicense('${key}',true)">Riattiva</button>`}
+        <button class="btn btn-sm" onclick="deleteLicense('${key}')" title="Elimina definitivamente" style="background:transparent;color:#6b7280;border:1px solid rgba(100,116,139,.2);font-size:.75rem;padding:.3rem .55rem;" onmouseover="this.style.color='#ef4444';this.style.borderColor='rgba(239,68,68,.4)'" onmouseout="this.style.color='#6b7280';this.style.borderColor='rgba(100,116,139,.2)'">🗑</button>
       </td>
     </tr>`;
   }).join('');
@@ -772,6 +773,19 @@ async function toggleLicense(key, active) {
   renderStats();
   renderTable();
   showToast(active ? '✅ Licenza riattivata' : '🔴 Licenza disattivata');
+}
+
+async function deleteLicense(key) {
+  const lic = licensesData.licenses[key];
+  // Doppia conferma per operazione irreversibile
+  if (!confirm(`⚠️ ELIMINARE DEFINITIVAMENTE la licenza di:\n\n${lic.studio} — ${lic.owner||''}\nChiave: ${key}\n\nIl cliente verrà bloccato entro 24h.\nOperazione IRREVERSIBILE.`)) return;
+  if (!confirm(`Conferma finale: eliminare ${key}?`)) return;
+
+  delete licensesData.licenses[key];
+  await saveData(`Eliminazione licenza: ${key}`);
+  renderStats();
+  renderTable();
+  showToast('🗑 Licenza eliminata definitivamente');
 }
 
 function showDevices(key) {
