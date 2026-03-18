@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- CephAnalysis Pro — License Manager v2.1 (2026-03-17 20:45) -->
+<!-- CephAnalysis Pro — License Manager v3.0 (2026-03-18) -->
 <!-- Clone del sistema OrthoManager Pro, indipendente e dedicato a CephAnalysis -->
 <!-- Deploy: GitHub Pages su repo separato (es. odontoiatriamonaco/cephanalysis-licenses) -->
 <html lang="it">
@@ -335,11 +335,11 @@ tr:hover td { background:var(--card-hover); }
       <div class="field">
         <label>Tipo Licenza</label>
         <select id="f-type" onchange="updateMaxDevices()">
-          <option value="trial">Trial (30gg)</option>
-          <option value="standard" selected>Standard</option>
-          <option value="pro">Pro</option>
-          <option value="lifetime">Lifetime</option>
-          <option value="group">Gruppo (multi-PC)</option>
+          <option value="trial">Trial (30gg, 1 PC)</option>
+          <option value="standard" selected>Standard (1 PC)</option>
+          <option value="pro">Pro (multi-PC, default 3)</option>
+          <option value="lifetime">Lifetime (∞ PC)</option>
+          <option value="group">Gruppo (corso/studio)</option>
         </select>
       </div>
       <div class="field">
@@ -354,9 +354,9 @@ tr:hover td { background:var(--card-hover); }
     </div>
     <div id="f-group-row" style="display:none">
       <div class="field">
-        <label>Numero max PC / Browser (licenza gruppo)</label>
-        <input id="f-maxdevices" type="number" value="10" min="1" max="500">
-        <div class="hint">Es. 30 per un corso di perfezionamento con 30 studenti</div>
+        <label id="f-maxdevices-label">Numero max PC / Browser</label>
+        <input id="f-maxdevices" type="number" value="3" min="1" max="500">
+        <div class="hint" id="f-maxdevices-hint">Es. 3 per Pro, 30 per un corso con 30 studenti</div>
       </div>
     </div>
     <div id="generated-key" style="display:none">
@@ -664,11 +664,16 @@ function renderTable() {
                    : lic.expires
                      ? `${lic.expires} <span style="color:var(--text3);font-size:.7rem">(${daysLeft>0?daysLeft+'gg':'scaduta'})</span>`
                      : '<span style="color:var(--text3)">—</span>';
-    const deviceCell = lic.type === 'group'
-      ? `<span style="color:var(--accent2);font-size:.75rem;font-family:var(--mono)">🖥 ${(lic.devices||[]).length}/${lic.maxDevices||'?'} PC</span>`
-      : lic.browserId
-        ? `<span style="color:var(--green);font-size:.75rem;font-family:var(--mono)" title="${lic.browserId}">🖥 ${lic.browserId.substring(0,8)}…</span>`
-        : `<span style="color:var(--text3);font-size:.75rem">Non attivata</span>`;
+    const isMulti   = lic.type === 'group' || lic.type === 'pro';
+    const maxDev    = isMulti ? (lic.maxDevices || (lic.type === 'pro' ? 3 : 10)) : 1;
+    const devices   = Array.isArray(lic.devices) ? lic.devices : (lic.browserId ? [lic.browserId] : []);
+    const deviceCell = lic.type === 'lifetime'
+      ? `<span style="color:var(--green);font-size:.75rem">∞ illimitati</span>`
+      : isMulti
+        ? `<span style="color:${devices.length >= maxDev ? 'var(--amber)' : 'var(--accent2)'};font-size:.75rem;font-family:var(--mono)">🖥 ${devices.length}/${maxDev} PC</span>`
+        : devices.length
+          ? `<span style="color:var(--green);font-size:.75rem;font-family:var(--mono)" title="${devices[0]}">🖥 ${devices[0].substring(0,8)}…</span>`
+          : `<span style="color:var(--text3);font-size:.75rem">Non attivata</span>`;
 
     return `<tr>
       <td class="key-cell" onclick="copyKey('${key}')" title="Clicca per copiare">${key}</td>
@@ -677,7 +682,11 @@ function renderTable() {
         ${lic.owner ? `<br><span style="color:var(--text3);font-size:.75rem">${lic.owner}</span>` : ''}
         ${lic.email ? `<br><span style="color:var(--text3);font-size:.7rem">${lic.email}</span>` : ''}
       </td>
-      <td><span class="badge ${getTypeBadge(lic.type)}">${lic.type==='group'?'👥 Gruppo':lic.type||'standard'}</span></td>
+      <td><span class="badge ${getTypeBadge(lic.type)}">${
+        lic.type === 'group' ? '👥 Gruppo' :
+        lic.type === 'pro'   ? '💼 Pro (' + (lic.maxDevices||3) + 'PC)' :
+        lic.type || 'standard'
+      }</span></td>
       <td>${expText}</td>
       <td>${deviceCell}</td>
       <td><span class="badge ${status.cls}">${status.label}</span></td>
@@ -685,7 +694,7 @@ function renderTable() {
         <button class="btn btn-ghost btn-sm" onclick="copyKey('${key}')" title="Copia chiave">📋</button>
         <button class="btn btn-ghost btn-sm" onclick="editLicense('${key}')" title="Modifica">✏️</button>
         <button class="btn btn-amber btn-sm" onclick="extendLicense('${key}')" title="Estendi scadenza">📅</button>
-        ${(lic.browserId || (lic.devices && lic.devices.length)) ? `<button class="btn btn-ghost btn-sm" onclick="showDevices('${key}')" title="Gestisci dispositivi">🖥</button>` : ''}
+        ${(devices.length || lic.browserId) ? `<button class="btn btn-ghost btn-sm" onclick="showDevices('${key}')" title="Gestisci PC">🖥</button>` : ''}
         ${lic.active
           ? `<button class="btn btn-danger btn-sm" onclick="toggleLicense('${key}',false)">Disattiva</button>`
           : `<button class="btn btn-success btn-sm" onclick="toggleLicense('${key}',true)">Riattiva</button>`}
@@ -703,14 +712,35 @@ function generateKey() {
 }
 
 function updateMaxDevices() {
-  const type   = document.getElementById('f-type').value;
-  const months = document.getElementById('f-months');
-  const hint   = document.getElementById('duration-hint');
+  const type     = document.getElementById('f-type').value;
+  const months   = document.getElementById('f-months');
+  const hint     = document.getElementById('duration-hint');
   const groupRow = document.getElementById('f-group-row');
-  if (type === 'trial')    { months.value = '1';   hint.textContent = '(auto: 1 mese)';  months.readOnly = true; }
-  else if (type==='lifetime'){ months.value = '999'; hint.textContent = '(perpetua)';     months.readOnly = true; }
-  else { hint.textContent = ''; months.readOnly = false; }
-  groupRow.style.display = (type === 'group') ? 'block' : 'none';
+  const maxInput = document.getElementById('f-maxdevices');
+  const maxLabel = document.getElementById('f-maxdevices-label');
+  const maxHint  = document.getElementById('f-maxdevices-hint');
+
+  if (type === 'trial') {
+    months.value = '1'; hint.textContent = '(auto: 1 mese)'; months.readOnly = true;
+  } else if (type === 'lifetime') {
+    months.value = '999'; hint.textContent = '(perpetua)'; months.readOnly = true;
+  } else {
+    hint.textContent = ''; months.readOnly = false;
+  }
+
+  if (type === 'pro') {
+    groupRow.style.display = 'block';
+    maxInput.value = '3';
+    maxLabel.textContent = 'Numero max PC (licenza Pro)';
+    maxHint.textContent  = 'Default 3 — modifica secondo accordo con il cliente';
+  } else if (type === 'group') {
+    groupRow.style.display = 'block';
+    maxInput.value = '10';
+    maxLabel.textContent = 'Numero max PC (licenza gruppo)';
+    maxHint.textContent  = 'Es. 30 per un corso di perfezionamento con 30 studenti';
+  } else {
+    groupRow.style.display = 'none';
+  }
   updateExpiresPreview();
 }
 
@@ -748,8 +778,8 @@ async function generateLicense() {
     expires,
     created: now.toISOString().split('T')[0],
     notes,
-    ...(type === 'group' ? {
-      maxDevices: parseInt(document.getElementById('f-maxdevices').value) || 10,
+    ...((type === 'group' || type === 'pro') ? {
+      maxDevices: parseInt(document.getElementById('f-maxdevices').value) || (type === 'pro' ? 3 : 10),
       devices: []
     } : {})
   };
@@ -792,43 +822,47 @@ function showDevices(key) {
   const lic = licensesData.licenses[key];
   document.getElementById('dev-key-text').textContent = key;
   const list = document.getElementById('devices-list');
+  const isMulti = lic.type === 'group' || lic.type === 'pro';
 
-  // ── Licenza GRUPPO ────────────────────────────────────────────────────────
-  if (lic.type === 'group') {
-    const devices = lic.devices || [];
+  if (isMulti) {
+    const devices = Array.isArray(lic.devices) ? lic.devices : [];
+    const maxDev  = lic.maxDevices || (lic.type === 'pro' ? 3 : 10);
     if (devices.length === 0) {
-      list.innerHTML = '<p style="color:var(--text3);font-size:.85rem">Nessun dispositivo registrato ancora.</p>';
+      list.innerHTML = '<p style="color:var(--text3);font-size:.85rem">Nessun PC registrato ancora.</p>';
     } else {
       list.innerHTML = `
         <p style="font-size:.75rem;color:var(--text3);margin-bottom:.75rem">
-          ${devices.length}/${lic.maxDevices||'?'} PC registrati — 
+          ${devices.length}/${maxDev} PC registrati —
           <button class="btn btn-danger btn-sm" onclick="resetAllDevices('${key}')">🗑 Reset tutti</button>
         </p>` +
         devices.map((id, i) => `
           <div class="device-item">
             <div>
               <div class="device-fp">${id}</div>
-              <div style="font-size:.68rem;color:var(--text3);margin-top:2px">Dispositivo ${i+1}</div>
+              <div style="font-size:.68rem;color:var(--text3);margin-top:2px">PC ${i+1}</div>
             </div>
-            <button class="btn btn-danger btn-sm" onclick="removeSingleDevice('${key}', '${id}')">✕</button>
+            <button class="btn btn-danger btn-sm" onclick="removeSingleDevice('${key}','${id}')">✕ Rimuovi</button>
           </div>`).join('');
     }
   } else {
-    // ── Licenza INDIVIDUALE ──────────────────────────────────────────────────
-    if (!lic.browserId) {
-      list.innerHTML = '<p style="color:var(--text3);font-size:.85rem">Nessun browser registrato.</p>';
+    // Standard / Trial — singolo browserId
+    const bid = lic.browserId;
+    if (!bid) {
+      list.innerHTML = '<p style="color:var(--text3);font-size:.85rem">Nessun PC attivato.</p>';
     } else {
       list.innerHTML = `
         <div class="device-item">
           <div>
-            <div class="device-fp">${lic.browserId}</div>
+            <div class="device-fp">${bid}</div>
             <div style="font-size:.7rem;color:var(--text3);margin-top:2px">
               Attivato: ${lic.activatedAt ? new Date(lic.activatedAt).toLocaleDateString('it-IT') : '—'}
-              · Ultima verifica: ${lic.lastSeen ? new Date(lic.lastSeen).toLocaleDateString('it-IT') : '—'}
             </div>
           </div>
-          <button class="btn btn-danger btn-sm" onclick="resetDevice('${key}')">🔄 Reset</button>
-        </div>`;
+          <button class="btn btn-danger btn-sm" onclick="resetDevice('${key}')">🔄 Reset PC</button>
+        </div>
+        <p style="font-size:.72rem;color:var(--text3);margin-top:.75rem">
+          Reset permette al cliente di riattivare su un altro PC.
+        </p>`;
     }
   }
   document.getElementById('modal-devices').style.display = 'flex';
@@ -913,13 +947,14 @@ function editLicense(key) {
   document.getElementById('e-notes').value   = lic.notes   || '';
 
   const groupRow = document.getElementById('e-group-row');
-  if (lic.type === 'group') {
+  if (lic.type === 'group' || lic.type === 'pro') {
     groupRow.style.display = 'block';
-    document.getElementById('e-maxdevices').value = lic.maxDevices || 10;
+    document.getElementById('e-maxdevices').value = lic.maxDevices || (lic.type === 'pro' ? 3 : 10);
     const devices = lic.devices || [];
+    const maxDev  = lic.maxDevices || (lic.type === 'pro' ? 3 : 10);
     document.getElementById('e-devices-info').textContent =
-      'Dispositivi registrati: ' + devices.length + '/' + (lic.maxDevices||'?') +
-      (devices.length ? ' · Ultimo: ' + (lic.lastDeviceAt ? new Date(lic.lastDeviceAt).toLocaleDateString('it-IT') : '—') : '');
+      'PC registrati: ' + devices.length + '/' + maxDev +
+      (devices.length ? ' · Ultimo accesso: ' + (lic.lastDeviceAt ? new Date(lic.lastDeviceAt).toLocaleDateString('it-IT') : '—') : ' · Nessuno ancora');
   } else {
     groupRow.style.display = 'none';
   }
@@ -936,8 +971,8 @@ async function saveEdit() {
   lic.expires   = document.getElementById('e-expires').value || null;
   lic.active    = document.getElementById('e-active').value === 'true';
   lic.notes     = document.getElementById('e-notes').value.trim();
-  if (lic.type === 'group') {
-    lic.maxDevices = parseInt(document.getElementById('e-maxdevices').value) || 10;
+  if (lic.type === 'group' || lic.type === 'pro') {
+    lic.maxDevices = parseInt(document.getElementById('e-maxdevices').value) || (lic.type === 'pro' ? 3 : 10);
     if (!Array.isArray(lic.devices)) lic.devices = [];
   }
   await saveData(`Modifica licenza: ${editingKey}`);
