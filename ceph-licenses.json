@@ -1,5 +1,5 @@
 {
-  "_info": "CephAnalysis Pro ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Registro Licenze. Modificare solo tramite il License Manager.",
+  "_info": "CephAnalysis Pro ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Registro Licenze. Modificare solo tramite il License Manager.",
   "_updated": "2026-03-18",
   "_version": "1.0",
   "licenses": {
@@ -11,7 +11,7 @@
       "type": "pro",
       "expires": "2027-12-31",
       "created": "2026-03-17",
-      "notes": "Licenza demo ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ non distribuire"
+      "notes": "Licenza demo ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ non distribuire"
     },
     "CEPH-MONA-XXXX-0001": {
       "studio": "Studio Monaco",
@@ -47,22 +47,6 @@
         "bx-mmvwanl5-zaqyxuy7d"
       ],
       "lastDeviceAt": "2026-03-18T10:25:19.003Z"
-    },
-    "CEPH-9QG6-L9RM-ESKH": {
-      "studio": "test",
-      "owner": "test",
-      "email": "test",
-      "active": true,
-      "type": "pro",
-      "expires": "2027-03-18",
-      "created": "2026-03-18",
-      "notes": "",
-      "maxDevices": 2,
-      "devices": [
-        "bx-mmvwnq5g-e0vnuezbi",
-        "bx-mmvwo7o2-hoyyt2qoj"
-      ],
-      "lastDeviceAt": "2026-03-18T10:35:51.642Z"
     }
   }
 }
