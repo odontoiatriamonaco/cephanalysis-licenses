@@ -59,9 +59,10 @@
       "notes": "",
       "maxDevices": 2,
       "devices": [
-        "bx-mmvwnq5g-e0vnuezbi"
+        "bx-mmvwnq5g-e0vnuezbi",
+        "bx-mmvwo7o2-hoyyt2qoj"
       ],
-      "lastDeviceAt": "2026-03-18T10:35:29.005Z"
+      "lastDeviceAt": "2026-03-18T10:35:51.642Z"
     }
   }
 }
