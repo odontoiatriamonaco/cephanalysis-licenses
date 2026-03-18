@@ -1,5 +1,5 @@
 /**
- * CephAnalysis Pro — License Check v3.0 (2026-03-18)
+ * CephAnalysis Pro — License Check v3.1 (2026-03-18 23:10)
  * Da includere in index.html PRIMA di ceph-core.js
  *
  * Logica PC per tipo licenza:

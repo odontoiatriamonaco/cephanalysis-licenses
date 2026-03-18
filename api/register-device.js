@@ -1,5 +1,5 @@
 /**
- * Vercel Function — register-device.js (2026-03-18)
+ * Vercel Function — register-device.js (2026-03-18 23:10)
  * POST /api/register-device
  * Body: { key: "CEPH-XXXX-XXXX-XXXX", browserId: "bx-..." }
  *
