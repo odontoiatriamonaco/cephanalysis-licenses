@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "builds": [
-    { "src": "api/*.js", "use": "@vercel/node" },
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "ceph-licenses.json", "use": "@vercel/static" },
-    { "src": "ceph-license-check.js", "use": "@vercel/static" }
-  ]
-}
