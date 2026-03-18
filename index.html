@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- CephAnalysis Pro — License Manager v3.1 (2026-03-18 23:10) -->
+<!-- CephAnalysis Pro — License Manager v3.2 (2026-03-18 23:30) -->
 <!-- Clone del sistema OrthoManager Pro, indipendente e dedicato a CephAnalysis -->
 <!-- Deploy: GitHub Pages su repo separato (es. odontoiatriamonaco/cephanalysis-licenses) -->
 <html lang="it">
@@ -670,9 +670,14 @@ function renderTable() {
     const deviceCell = lic.type === 'lifetime'
       ? `<span style="color:var(--green);font-size:.75rem">∞ illimitati</span>`
       : isMulti
-        ? `<span style="color:${devices.length >= maxDev ? 'var(--amber)' : 'var(--accent2)'};font-size:.75rem;font-family:var(--mono)">🖥 ${devices.length}/${maxDev} PC</span>`
+        ? devices.length === 0
+          ? `<span style="color:var(--text3);font-size:.75rem">Nessun PC</span>`
+          : `<span style="color:${devices.length >= maxDev ? 'var(--amber)' : 'var(--green)'};font-size:.75rem;font-family:var(--mono)" title="${devices.join('\n')}">
+              🖥 ${devices.length}/${maxDev} PC<br>
+              <span style="font-size:.68rem;color:var(--text3)">${devices[0].substring(0,10)}…${devices.length > 1 ? ' +' + (devices.length-1) : ''}</span>
+             </span>`
         : devices.length
-          ? `<span style="color:var(--green);font-size:.75rem;font-family:var(--mono)" title="${devices[0]}">🖥 ${devices[0].substring(0,8)}…</span>`
+          ? `<span style="color:var(--green);font-size:.75rem;font-family:var(--mono)" title="${devices[0]}">🖥 ${devices[0].substring(0,12)}…</span>`
           : `<span style="color:var(--text3);font-size:.75rem">Non attivata</span>`;
 
     return `<tr>
