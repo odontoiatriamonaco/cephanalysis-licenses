@@ -1,6 +1,6 @@
 {
-  "_info": "CephAnalysis Pro ÃÂ¢ÃÂÃÂ Registro Licenze. Modificare solo tramite il License Manager.",
-  "_updated": "2026-03-17",
+  "_info": "CephAnalysis Pro ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Registro Licenze. Modificare solo tramite il License Manager.",
+  "_updated": "2026-03-18",
   "_version": "1.0",
   "licenses": {
     "CEPH-DEMO-0000-0000": {
@@ -11,7 +11,7 @@
       "type": "pro",
       "expires": "2027-12-31",
       "created": "2026-03-17",
-      "notes": "Licenza demo ÃÂ¢ÃÂÃÂ non distribuire"
+      "notes": "Licenza demo ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ non distribuire"
     },
     "CEPH-MONA-XXXX-0001": {
       "studio": "Studio Monaco",
@@ -32,6 +32,18 @@
       "expires": null,
       "created": "2026-03-17",
       "notes": ""
+    },
+    "CEPH-D3WT-ZJVS-PXDM": {
+      "studio": "Corso Test",
+      "owner": "Sm",
+      "email": "",
+      "active": true,
+      "type": "group",
+      "expires": "2026-09-18",
+      "created": "2026-03-18",
+      "notes": "",
+      "maxDevices": 10,
+      "devices": []
     }
   }
 }
