@@ -2,11 +2,8 @@
   "version": 2,
   "builds": [
     { "src": "api/*.js", "use": "@vercel/node" },
-    { "src": "*.html", "use": "@vercel/static" },
-    { "src": "*.json", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/$1" }
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "ceph-licenses.json", "use": "@vercel/static" },
+    { "src": "ceph-license-check.js", "use": "@vercel/static" }
   ]
 }
