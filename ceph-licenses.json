@@ -1,6 +1,6 @@
 {
   "_info": "CephAnalysis Pro ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Registro Licenze. Modificare solo tramite il License Manager.",
-  "_updated": "2026-03-18",
+  "_updated": "2026-03-19",
   "_version": "1.0",
   "licenses": {
     "CEPH-DEMO-0000-0000": {
@@ -44,9 +44,10 @@
       "notes": "",
       "maxDevices": 10,
       "devices": [
-        "bx-mmvwanl5-zaqyxuy7d"
+        "bx-mmvwanl5-zaqyxuy7d",
+        "bx-mmy1mrpg-eu64t5izt"
       ],
-      "lastDeviceAt": "2026-03-18T10:25:19.003Z"
+      "lastDeviceAt": "2026-03-19T22:30:15.628Z"
     }
   }
 }
