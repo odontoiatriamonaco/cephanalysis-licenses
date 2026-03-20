@@ -148,6 +148,18 @@
       "expires": "2027-03-20",
       "created": "2026-03-20",
       "notes": ""
+    },
+    "CEPH-335E-8PY3-76M2": {
+      "studio": "JCO",
+      "owner": "Gruppo JO",
+      "email": "",
+      "active": true,
+      "type": "group",
+      "expires": "2026-06-20",
+      "created": "2026-03-20",
+      "notes": "",
+      "maxDevices": 5,
+      "devices": []
     }
   }
 }
