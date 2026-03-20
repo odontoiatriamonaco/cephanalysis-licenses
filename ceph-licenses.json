@@ -96,6 +96,18 @@
       "notes": "",
       "maxDevices": 3,
       "devices": []
+    },
+    "CEPH-BPE2-NPY9-AJN5": {
+      "studio": "Rongo",
+      "owner": "Roberto Rongo",
+      "email": "",
+      "active": true,
+      "type": "pro",
+      "expires": "2027-03-20",
+      "created": "2026-03-20",
+      "notes": "",
+      "maxDevices": 3,
+      "devices": []
     }
   }
 }
