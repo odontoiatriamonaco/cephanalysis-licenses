@@ -138,6 +138,16 @@
       "expires": "2027-03-20",
       "created": "2026-03-20",
       "notes": ""
+    },
+    "CEPH-H55A-Q6G3-QCWU": {
+      "studio": "Tagliaferri",
+      "owner": "Renato Tagliaferri",
+      "email": "",
+      "active": true,
+      "type": "standard",
+      "expires": "2027-03-20",
+      "created": "2026-03-20",
+      "notes": ""
     }
   }
 }
