@@ -128,6 +128,16 @@
       "expires": "2027-03-20",
       "created": "2026-03-20",
       "notes": ""
+    },
+    "CEPH-5QQF-FR3Q-229Z": {
+      "studio": "Bocchino",
+      "owner": "Tecla Bcchino",
+      "email": "",
+      "active": true,
+      "type": "standard",
+      "expires": "2027-03-20",
+      "created": "2026-03-20",
+      "notes": ""
     }
   }
 }
