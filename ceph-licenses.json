@@ -72,6 +72,18 @@
       "notes": "",
       "maxDevices": 3,
       "devices": []
+    },
+    "CEPH-F545-YH77-R5AB": {
+      "studio": "Stradi",
+      "owner": "Stradi Roberto",
+      "email": "",
+      "active": true,
+      "type": "pro",
+      "expires": "2026-09-20",
+      "created": "2026-03-20",
+      "notes": "",
+      "maxDevices": 3,
+      "devices": []
     }
   }
 }
