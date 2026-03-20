@@ -118,6 +118,16 @@
       "expires": "2027-03-20",
       "created": "2026-03-20",
       "notes": ""
+    },
+    "CEPH-CMJP-XJ2A-T8A2": {
+      "studio": "Merone",
+      "owner": "Peppe Merone",
+      "email": "",
+      "active": true,
+      "type": "standard",
+      "expires": "2027-03-20",
+      "created": "2026-03-20",
+      "notes": ""
     }
   }
 }
