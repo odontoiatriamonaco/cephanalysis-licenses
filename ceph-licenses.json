@@ -46,9 +46,10 @@
       "devices": [
         "bx-mmvwanl5-zaqyxuy7d",
         "bx-mmy1mrpg-eu64t5izt",
-        "bx-mn2bvc42-o7yisils3"
+        "bx-mn2bvc42-o7yisils3",
+        "bx-mn2cem2c-dya2e1579"
       ],
-      "lastDeviceAt": "2026-03-22T22:27:55.751Z"
+      "lastDeviceAt": "2026-03-22T22:42:55.986Z"
     },
     "CEPH-BG6X-PVFY-B3C5": {
       "studio": "Marzio",
