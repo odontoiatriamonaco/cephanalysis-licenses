@@ -45,9 +45,10 @@
       "maxDevices": 10,
       "devices": [
         "bx-mmvwanl5-zaqyxuy7d",
-        "bx-mmy1mrpg-eu64t5izt"
+        "bx-mmy1mrpg-eu64t5izt",
+        "bx-mn2bvc42-o7yisils3"
       ],
-      "lastDeviceAt": "2026-03-19T22:30:15.628Z"
+      "lastDeviceAt": "2026-03-22T22:27:55.751Z"
     },
     "CEPH-BG6X-PVFY-B3C5": {
       "studio": "Marzio",
