@@ -167,7 +167,10 @@
       "created": "2026-03-20",
       "notes": "",
       "maxDevices": 5,
-      "devices": []
+      "devices": [
+        "bx-mn5r27ar-melxsxprt"
+      ],
+      "lastDeviceAt": "2026-03-25T07:56:28.667Z"
     }
   }
 }
