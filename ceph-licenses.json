@@ -104,9 +104,10 @@
       "notes": "",
       "maxDevices": 3,
       "devices": [
-        "bx-mn22rbr4-l8k2foysz"
+        "bx-mn22rbr4-l8k2foysz",
+        "bx-mn7gviks-amtfa4b3u"
       ],
-      "lastDeviceAt": "2026-03-22T18:12:52.505Z"
+      "lastDeviceAt": "2026-03-26T12:46:53.376Z"
     },
     "CEPH-BPE2-NPY9-AJN5": {
       "studio": "Rongo",
