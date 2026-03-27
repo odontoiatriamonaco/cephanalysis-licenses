@@ -187,7 +187,10 @@
       "created": "2026-03-26",
       "notes": "",
       "maxDevices": 50,
-      "devices": []
+      "devices": [
+        "bx-mn9288e3-pr5lzim1y"
+      ],
+      "lastDeviceAt": "2026-03-27T15:32:25.469Z"
     },
     "CEPH-P5XD-LUB2-RBTL": {
       "studio": "Studenti Salerno",
