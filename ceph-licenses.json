@@ -232,9 +232,10 @@
       "devices": [
         "bx-mndaet4h-1ugadyb5o",
         "bx-mndaf24e-rfl61madl",
-        "bx-mndaf3ye-wzfb5m04c"
+        "bx-mndaf3ye-wzfb5m04c",
+        "bx-mndafbfo-p0xnqn8ug"
       ],
-      "lastDeviceAt": "2026-03-30T14:32:46.584Z"
+      "lastDeviceAt": "2026-03-30T14:32:55.905Z"
     },
     "CEPH-VFM6-EF3W-7CH7": {
       "studio": "Test",
