@@ -229,7 +229,10 @@
       "created": "2026-03-26",
       "notes": "",
       "maxDevices": 35,
-      "devices": []
+      "devices": [
+        "bx-mndaet4h-1ugadyb5o"
+      ],
+      "lastDeviceAt": "2026-03-30T14:32:32.936Z"
     },
     "CEPH-VFM6-EF3W-7CH7": {
       "studio": "Test",
