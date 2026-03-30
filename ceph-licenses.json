@@ -230,9 +230,10 @@
       "notes": "",
       "maxDevices": 35,
       "devices": [
-        "bx-mndaet4h-1ugadyb5o"
+        "bx-mndaet4h-1ugadyb5o",
+        "bx-mndaf24e-rfl61madl"
       ],
-      "lastDeviceAt": "2026-03-30T14:32:32.936Z"
+      "lastDeviceAt": "2026-03-30T14:32:44.383Z"
     },
     "CEPH-VFM6-EF3W-7CH7": {
       "studio": "Test",
