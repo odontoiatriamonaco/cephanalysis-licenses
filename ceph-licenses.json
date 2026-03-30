@@ -264,7 +264,10 @@
       "created": "2026-03-30",
       "notes": "",
       "maxDevices": 20,
-      "devices": []
+      "devices": [
+        "bx-mndgkq7x-ni0p4toit"
+      ],
+      "lastDeviceAt": "2026-03-30T17:25:07.344Z"
     }
   }
 }
