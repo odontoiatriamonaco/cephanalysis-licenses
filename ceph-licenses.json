@@ -266,9 +266,10 @@
       "notes": "",
       "maxDevices": 20,
       "devices": [
-        "bx-mndgkq7x-ni0p4toit"
+        "bx-mndgkq7x-ni0p4toit",
+        "bx-mndngpyr-7s8fnfztu"
       ],
-      "lastDeviceAt": "2026-03-30T17:25:07.344Z"
+      "lastDeviceAt": "2026-03-30T20:37:57.615Z"
     }
   }
 }
